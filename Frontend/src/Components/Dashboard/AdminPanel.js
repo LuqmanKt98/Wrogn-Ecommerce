@@ -4,17 +4,37 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import HeaderAdminPanel from "./HeaderAdminPanel";
 import AddProducts from "./AddProducts";
 import ViewProduct from "./ViewProduct";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
+import DeleteProducts from "./DeleteProducts";
 
 const AdminPanel = () => {
+  // State to manage the displayed content
   const [displayContent, setDisplayContent] = useState("dashboard");
 
+  // Function to handle sidebar item clicks
   const handleSidebarClick = (content) => {
     setDisplayContent(content);
   };
 
+  // Function to get the page title based on the selected content
+  const getPageTitle = () => {
+    switch (displayContent) {
+      case "dashboard":
+        return "Dashboard";
+      case "add Product":
+        return "Add Product";
+      case "view Product":
+        return "View Product";
+      case "deleteProduct":
+        return "Delete Product";
+      default:
+        return "";
+    }
+  };
+
   return (
     <div className="container-fluid">
+      {/* Header component */}
       <HeaderAdminPanel />
 
       <div className="row">
@@ -25,55 +45,35 @@ const AdminPanel = () => {
         >
           <div className="position-sticky">
             <ul className="nav flex-column">
-              <li className="nav-item">
-                <Link
-                  className={`nav-link ${
-                    displayContent === "dashboard" ? "active" : ""
-                  }`}
-                  onClick={() => handleSidebarClick("dashboard")}
-                >
-                  Dashboard
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  className={`nav-link ${
-                    displayContent === "addProduct" ? "active" : ""
-                  }`}
-                  onClick={() => handleSidebarClick("addProduct")}
-                >
-                  Add Product
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  className={`nav-link ${
-                    displayContent === "viewProduct" ? "active" : ""
-                  }`}
-                  onClick={() => handleSidebarClick("viewProduct")}
-                >
-                  View Product
-                </Link>
-              </li>
-              {/* Add other sidebar items as needed */}
+              {/* Render sidebar items dynamically */}
+              {["Dashboard", "Add Product", "View Product", "Delete Products"].map(
+                (content) => (
+                  <li className="nav-item" key={content}>
+                    <Link
+                      to="#"
+                      className={`nav-link ${
+                        displayContent === content ? "active" : ""
+                      }`}
+                      onClick={() => handleSidebarClick(content)}
+                    >
+                      {content === "Delete Product" ? "Delete Product" : content}
+                    </Link>
+                  </li>
+                )
+              )}
             </ul>
           </div>
         </nav>
 
         {/* Main content */}
         <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          {/* Page title */}
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 className="h2">
-              {displayContent === "dashboard"
-                ? "Dashboard"
-                : displayContent === "addProduct"
-                ? "Add Product"
-                : "View Product"}
-            </h1>
+            <h1 className="h2">{getPageTitle()}</h1>
           </div>
 
           {/* Conditionally render content based on the selected item in the sidebar */}
-          {displayContent === "dashboard" && (
+          {displayContent === "Dashboard" && (
             <div className="card shadow p-4">
               {/* Dashboard content */}
               {/* ... */}
@@ -81,8 +81,10 @@ const AdminPanel = () => {
             </div>
           )}
 
-          {displayContent === "addProduct" && <AddProducts />}
-          {displayContent === "viewProduct" && <ViewProduct />}
+          {displayContent === "Add Product" && <AddProducts />}
+          {displayContent === "View Product" && <ViewProduct />}
+          {displayContent === "Delete Products" && <DeleteProducts/>}
+          {/* Add other content components for "Delete Product" as needed */}
         </main>
       </div>
     </div>

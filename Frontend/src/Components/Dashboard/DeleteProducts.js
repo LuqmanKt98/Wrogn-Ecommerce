@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { getProduct } from "../../services/api";
+import { getProduct, deleteProduct } from "../../services/api";
 import { Modal, Button } from "react-bootstrap";
 
-const ViewProduct = () => {
-  const [productData, setProductData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+const DeleteProducts = () => {
+  const [productData, setProductData] = useState([]); // State to store product data
+  const [searchTerm, setSearchTerm] = useState(""); // State to handle search term
+  const [selectedProduct, setSelectedProduct] = useState(null); // State to track selected product for details modal
+  const [showModal, setShowModal] = useState(false); // State to control visibility of the details modal
 
+  // Fetch product data on component mount
   useEffect(() => {
     getProductDetail();
   }, []);
 
+  // Function to fetch product details
   const getProductDetail = async () => {
     try {
       const result = await getProduct();
@@ -26,20 +28,47 @@ const ViewProduct = () => {
     }
   };
 
+  // Function to open details modal for a specific product
   const openProductDetailsModal = (product) => {
     setSelectedProduct(product);
     setShowModal(true);
   };
 
+  // Function to close details modal
   const closeProductDetailsModal = () => {
     setSelectedProduct(null);
     setShowModal(false);
   };
 
+  // Filtered products based on search term
   const filteredProducts = productData.filter((product) =>
     product.productName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Function to handle deleting products
+  const handleDeleteProducts = async (product) => {
+    const productId = product.productId;
+
+    try {
+      // Call the deleteProduct API with the product ID
+      await deleteProduct(productId);
+
+      // Update the productData state by filtering out the deleted product
+      setProductData((prevProducts) =>
+        prevProducts.filter((prod) => prod.productId !== productId)
+      );
+
+      // Close the modal if the deleted product is the currently selected one
+      if (selectedProduct && selectedProduct.productId === productId) {
+        closeProductDetailsModal();
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      // Provide user feedback on deletion failure if needed
+    }
+  };
+
+  // JSX for the component
   return (
     <div className="card shadow container">
       <div className="mb-3">
@@ -56,21 +85,27 @@ const ViewProduct = () => {
             <th>Product ID</th>
             <th>Product Name</th>
             <th>Category</th>
-            <th>View</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {filteredProducts.map((product) => (
-            <tr key={product._id}>
+            <tr key={product.productId}>
               <td>{product.productId}</td>
               <td>{product.productName}</td>
               <td>{product.productCategory}</td>
               <td>
                 <button
-                  className="btn btn-dark text-white"
+                  className="btn btn-dark text-white me-2"
                   onClick={() => openProductDetailsModal(product)}
                 >
                   View Details
+                </button>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleDeleteProducts(product)}
+                >
+                  Delete
                 </button>
               </td>
             </tr>
@@ -114,4 +149,4 @@ const ViewProduct = () => {
   );
 };
 
-export default ViewProduct;
+export default DeleteProducts;

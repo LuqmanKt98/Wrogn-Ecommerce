@@ -8,10 +8,10 @@ const AddProducts = () => {
     productName: "",
     productId: 0,
     productPrice: 0,
-    productColors: [],
-    productSizes: [],
+    productColors: [],  // Array to store selected colors
+    productSizes: [],   // Array to store selected sizes
     productCategory: "",
-    productImage: "",
+    productImageURL: "",
   });
 
   // Handle form input changes
@@ -20,9 +20,10 @@ const AddProducts = () => {
 
     // Handle checkboxes separately
     if (type === "checkbox") {
+      // Determine whether it's a color or size checkbox
       const updatedArray = checked
         ? [...productData[name], value]
-        : productData[name].filter((color) => color !== value);
+        : productData[name].filter((item) => item !== value);
 
       setProductData({
         ...productData,
@@ -109,6 +110,19 @@ const AddProducts = () => {
                   </label>
                 </div>
                 {/* Repeat similar structure for other colors */}
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    id="colorBlue"
+                    className="form-check-input"
+                    name="productColors"
+                    value="Blue"
+                    onChange={handleChange}
+                  />
+                  <label htmlFor="colorBlue" className="form-check-label">
+                    Blue
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -130,6 +144,19 @@ const AddProducts = () => {
                   </label>
                 </div>
                 {/* Repeat similar structure for other sizes */}
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    id="sizeMedium"
+                    className="form-check-input"
+                    name="productSizes"
+                    value="Medium"
+                    onChange={handleChange}
+                  />
+                  <label htmlFor="sizeMedium" className="form-check-label">
+                    Medium
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -148,14 +175,14 @@ const AddProducts = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="productImage" className="form-label">
+              <label htmlFor="productImageURL" className="form-label">
                 Product Image Url:
               </label>
               <input
                 type="text"
-                id="productImage"
+                id="productImageURL"
                 className="form-control"
-                name="productImage"
+                name="productImageURL"
                 onChange={handleChange}
                 required
               />
