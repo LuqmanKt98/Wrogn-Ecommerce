@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import HeaderAdminPanel from "./HeaderAdminPanel";
 import AddProducts from "./AddProducts";
 import ViewProduct from "./ViewProduct";
+import UpdateProduct from "./UpdateProduct";
 import { Link } from "react-router-dom";
 import DeleteProducts from "./DeleteProducts";
 
@@ -21,10 +22,12 @@ const AdminPanel = () => {
     switch (displayContent) {
       case "dashboard":
         return "Dashboard";
-      case "add Product":
+      case "addProduct":
         return "Add Product";
-      case "view Product":
+      case "viewProduct":
         return "View Product";
+      case "updateProduct":
+        return "Update Product";
       case "deleteProduct":
         return "Delete Product";
       default:
@@ -46,7 +49,7 @@ const AdminPanel = () => {
           <div className="position-sticky">
             <ul className="nav flex-column">
               {/* Render sidebar items dynamically */}
-              {["Dashboard", "Add Product", "View Product", "Delete Products"].map(
+              {["Dashboard", "Add Product", "View Product", "Update Product", "Delete Products"].map(
                 (content) => (
                   <li className="nav-item" key={content}>
                     <Link
@@ -83,7 +86,8 @@ const AdminPanel = () => {
 
           {displayContent === "Add Product" && <AddProducts />}
           {displayContent === "View Product" && <ViewProduct />}
-          {displayContent === "Delete Products" && <DeleteProducts/>}
+          {displayContent === "Update Product" && <UpdateProduct />}
+          {displayContent === "Delete Products" && <DeleteProducts />}
           {/* Add other content components for "Delete Product" as needed */}
         </main>
       </div>

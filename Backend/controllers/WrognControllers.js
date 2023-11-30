@@ -62,3 +62,55 @@ export const deleteProducts = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+
+// fetchProduct Controller function to handle the retrieval of a single product by ID
+export const fetchProduct = async (req, res) => {
+  const productId = req.params.productId;
+
+  console.log("Fetching product with ID:", productId);
+
+  try {
+    // Finding the product in the database using the productId
+    const product = await ProductsModel.findOne({ productId: productId });
+
+    if (!product) {
+      // If the product with the specified ID is not found, return a 404 response
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    console.log("Product fetched successfully:", product);
+    // Sending the fetched product as a JSON response
+    res.json(product);
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    // Sending a 500 Internal Server Error response in case of an error
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+
+
+
+export const updateProduct = async (req, res) => {
+  const productId = req.params.productId;
+  const updatedProductData = req.body;
+
+  try {
+    const updatedProduct = await ProductsModel.findOneAndUpdate(
+      { productId: productId },
+      updatedProductData,
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    res.json(updatedProduct);
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
